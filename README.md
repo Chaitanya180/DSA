@@ -1,5 +1,110 @@
 # DSA
 
+## STACK INFIX AND POSTFIX EVALUATION
+```
+
+import java.util.HashMap;
+import java.util.Stack;
+
+class Solution {
+    public int calculate(String s) {
+        // Remove all spaces from the input string
+        s = s.replace(" ", "");
+        
+        // Convert infix expression to postfix
+        s = postfix(s);
+        
+        // Evaluate the postfix expression and return the result
+        return evaluatePostfix(s);
+    }
+
+    public static String postfix(String s) {
+        HashMap<Character, Integer> precedenceMap = new HashMap<>();
+        StringBuilder postfixBuilder = new StringBuilder();
+        
+        // Define operator precedence
+        precedenceMap.put('+', 1);
+        precedenceMap.put('-', 1);
+        precedenceMap.put('*', 2);
+        precedenceMap.put('/', 2);
+        
+        Stack<Character> operatorStack = new Stack<>();
+        
+        for (char c : s.toCharArray()) {
+            if (Character.isDigit(c)) {
+                // Append digits directly to the postfix expression
+                postfixBuilder.append(c);
+            } else if (c == '(') {
+                // Push opening parentheses to the stack
+                operatorStack.push(c);
+            } else if (c == ')') {
+                // Pop from stack to postfixBuilder until an opening parenthesis is encountered
+                while (!operatorStack.isEmpty() && operatorStack.peek() != '(') {
+                    postfixBuilder.append(operatorStack.pop());
+                }
+                operatorStack.pop(); // Remove the '(' from the stack
+            } else {
+                // Handle operators
+                while (!operatorStack.isEmpty() && precedenceMap.containsKey(operatorStack.peek())
+                        && precedenceMap.get(c) <= precedenceMap.get(operatorStack.peek())) {
+                    postfixBuilder.append(operatorStack.pop());
+                }
+                operatorStack.push(c);
+            }
+        }
+
+        // Pop remaining operators from the stack
+        while (!operatorStack.isEmpty()) {
+            postfixBuilder.append(operatorStack.pop());
+        }
+
+        return postfixBuilder.toString();
+    }
+
+    public static int evaluatePostfix(String s) {
+        Stack<Integer> valueStack = new Stack<>();
+        
+        for (char c : s.toCharArray()) {
+            if (Character.isDigit(c)) {
+                // Push digits onto the stack
+                valueStack.push(c - '0');
+            } else {
+                // Pop two operands for the operator
+                int b = valueStack.pop();
+                int a = valueStack.pop();
+                
+                // Apply the operator and push the result back to the stack
+                switch (c) {
+                    case '+':
+                        valueStack.push(a + b);
+                        break;
+                    case '-':
+                        valueStack.push(a - b);
+                        break;
+                    case '*':
+                        valueStack.push(a * b);
+                        break;
+                    case '/':
+                        valueStack.push(a / b);
+                        break;
+                }
+            }
+        }
+        
+        // The final result will be the only value in the stack
+        return valueStack.pop();
+    }
+
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        System.out.println(sol.calculate("3 + 2 * 2")); // Expected output: 7
+        System.out.println(sol.calculate(" 3/2 "));     // Expected output: 1
+        System.out.println(sol.calculate(" 3+5 / 2 ")); // Expected output: 5
+    }
+}
+
+```
+
 ## GRAPH CREATION USING ADJLIST  BFS(QUEUE) AND DFS(RECURSSION)
 
 ```
