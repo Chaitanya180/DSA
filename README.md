@@ -274,6 +274,88 @@ class Pair {
 
 
 ```
+## Is Graph Bipartite?
+```
+#### using DFS
+class Solution {
+    public boolean isBipartite(int[][] graph) {
+        int n=graph.length;
+        int col[]=new int[n];
+        Arrays.fill(col,-1);
+
+        for(int i=0;i<n;i++){
+            if(col[i]==-1){
+                if(!dfs(i,0,graph,col)){
+                    return false;
+                }
+            }
+        }
+        return true;
+        
+    }
+
+    public boolean dfs(int i,int c,int[][] graph,int col[]){
+        col[i]=c;
+
+
+        for(int j:graph[i]){
+            if(col[j]==-1){
+            if(!dfs(j,1-c,graph,col)){
+                return false;
+            }
+            }
+            else if(col[i]==col[j]){
+               return false;
+            }
+            
+        }
+
+        return true;
+
+
+    }
+}
+
+
+#### USING BFS
+
+class Solution {
+    public boolean isBipartite(int[][] graph) {
+        int n=graph.length;
+        int color[]=new int[n];
+        Arrays.fill(color,-1);
+        Queue<Integer> q=new LinkedList<>();
+        
+        for(int k=0;k<n;k++){
+        if(color[k]==-1){
+            q.add(k);
+          color[k]=0;
+        while(!q.isEmpty()){
+           int i=q.poll();
+
+           for(int j:graph[i]){
+               if(color[j]==-1){
+                color[j]=1-color[i];
+                q.add(j);
+               }else if(color[j]==color[i]){
+                      return false;
+               }
+                
+               
+           }
+        }
+        }
+        }
+
+        return true;
+
+        
+    }
+}
+
+
+
+```
 ## BFS APPlICATION
 ```
 class Solution {
